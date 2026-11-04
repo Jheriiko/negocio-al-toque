@@ -1,0 +1,30 @@
+name: Render Negocio al Toque
+on:
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install edge-tts requests
+          npm install
+      - name: Generar Assets
+        run: python render_cloud.py
+      - name: Renderizar Video
+        run: npx remotion render src/index.ts TechUcronia video_final.mp4 --props=props.json
+      - name: Subir Video
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-comic
+          path: video_final.mp4
