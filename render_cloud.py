@@ -26,14 +26,24 @@ for i, escena in enumerate(escenas):
     prompt = prompts_comic[i % len(prompts_comic)]
     url = f"https://image.pollinations.ai/prompt/{urllib.parse.quote(prompt)}?width=1080&height=1920&nologo=true&seed={i+42}&model=flux"
     print(f"Descargando imagen {i+1}...")
-    r = requests.get(url, timeout=90)
-    with open(img_path, 'wb') as f: f.write(r.content)
+    
+    # VALIDACIÓN DE IMAGEN: Si falla, creamos una imagen negra de 1080x1920
+    try:
+        r = requests.get(url, timeout=90)
+        if r.status_code == 200 and len(r.content) > 5000:
+            with open(img_path, 'wb') as f: f.write(r.content)
+        else:
+            raise Exception("Imagen inválida")
+    except Exception as e:
+        print(f"⚠️ Error con imagen {i+1}: {e}. Usando fondo de respaldo.")
+        subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1", "-frames:v", "1", img_path], check=True)
+        
     subprocess.run(["cp", img_path, "public/"], check=True)
     
     props["scenes"].append({
         "text": escena["texto"],
         "audio": audio_path,
-        "image": img_path,
+        "image": img_path,  # Importante: solo el nombre, no la ruta
         "duration": max(3.0, len(escena["texto"]) / 15 + 1.5)
     })
 
