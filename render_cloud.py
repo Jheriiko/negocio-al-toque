@@ -37,7 +37,6 @@ def generar_imagen_cloudflare(prompt, idx, img_path, cache_path):
         if r.status_code != 200:
             raise Exception(f"HTTP {r.status_code}: {r.text[:200]}")
 
-        # DETECCIÓN INTELIGENTE: ¿JSON (Base64) o Binario?
         content_type = r.headers.get('Content-Type', '')
         if 'application/json' in content_type:
             json_data = r.json()
@@ -47,11 +46,10 @@ def generar_imagen_cloudflare(prompt, idx, img_path, cache_path):
         else:
             img_bytes = r.content
 
-        # CONVERSIÓN FINAL A JPG REAL
         img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
         img.save(img_path, 'JPEG', quality=92)
         subprocess.run(["cp", img_path, cache_path], check=True)
-        print(f"     ✅ Imagen JPG guardada: {os.path.getsize(img_path)//1024}KB")
+        print(f"     ✅ Imagen JPG: {os.path.getsize(img_path)//1024}KB")
         return True
     except Exception as e:
         print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
@@ -61,22 +59,29 @@ total_video = 0.0
 hashes = []
 
 for i, escena in enumerate(escenas):
-    audio_path = f"audio_{i}.mp3"
+    audio_name = f"audio_{i}.mp3"
+    audio_path = f"public/{audio_name}"
     subprocess.run(["edge-tts", "--voice", VOZ_NARRADOR, "--text", escena["texto"], "--write-media", audio_path], check=True)
-    subprocess.run(["cp", audio_path, "public/"], check=True)
 
     audio_dur = get_audio_duration(audio_path)
     scene_duration = audio_dur + 0.4
     total_video += scene_duration
 
-    img_path = f"public/img_{i}.jpg"
-    cache_path = f"cache/img_{i}.jpg"
+    img_name = f"img_{i}.jpg"
+    img_path = f"public/{img_name}"
+    cache_path = f"cache/{img_name}"
     generar_imagen_cloudflare(escena["img_prompt"], i, img_path, cache_path)
 
     with open(img_path, 'rb') as f:
         hashes.append(hashlib.md5(f.read()).hexdigest()[:8])
 
-    props["scenes"].append({"text": escena["texto"], "audio": audio_path, "image": img_path, "duration": scene_duration})
+    # SOLO el nombre del archivo, sin "public/"
+    props["scenes"].append({
+        "text": escena["texto"],
+        "audio": audio_name,
+        "image": img_name,
+        "duration": scene_duration
+    })
 
 with open('props.json', 'w') as f:
     json.dump(props, f, indent=2)
