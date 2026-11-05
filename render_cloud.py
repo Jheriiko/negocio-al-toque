@@ -1,4 +1,4 @@
-import json, os, subprocess, requests, time, hashlib, sys, io
+import json, os, subprocess, requests, time, hashlib, sys, io, base64
 from PIL import Image
 
 with open('guion.json', 'r') as f:
@@ -7,7 +7,7 @@ with open('guion.json', 'r') as f:
 escenas = data.get('escenas', [])
 props = {"scenes": []}
 os.makedirs('public', exist_ok=True)
-os.makedirs('cache', exist_ok=True) # NUEVA CARPETA DE CACHÉ
+os.makedirs('cache', exist_ok=True)
 
 VOZ_NARRADOR = "es-CO-GonzaloNeural"
 CF_ACCOUNT = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
@@ -19,41 +19,46 @@ def get_audio_duration(path):
     return float(result.stdout.strip()) if result.stdout.strip() else 3.0
 
 def generar_imagen_cloudflare(prompt, idx, img_path, cache_path):
-    # 1. VERIFICAR SI YA ESTÁ EN CACHÉ
     if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
-        print(f"  💾 Escena {idx+1} → Encontrada en Caché. Omitiendo Cloudflare.")
+        print(f"  💾 Escena {idx+1} → Caché encontrada.")
         subprocess.run(["cp", cache_path, img_path], check=True)
         return True
 
-    # 2. SI NO ESTÁ, GENERAR CON CLOUDFLARE
     if not CF_ACCOUNT or not CF_TOKEN:
-        raise Exception("❌ FALLO CRÍTICO: Faltan las credenciales de Cloudflare.")
-        
-    headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json", "Accept": "image/png"}
+        raise Exception("❌ Faltan credenciales de Cloudflare.")
+
+    headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
     prompt_unico = f"{prompt} (escena {idx+1}, variación {int(time.time()) % 10000})"
     payload = {"prompt": prompt_unico, "steps": 4}
-    
-    print(f"  ☁️ Escena {idx+1} → Generando en Cloudflare...")
+
+    print(f"  ☁️ Escena {idx+1} → Generando...")
     try:
         r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
-        if r.status_code == 200 and len(r.content) > 10000:
-            # CONVERSIÓN FORZADA A JPG REAL CON PILLOW
-            img = Image.open(io.BytesIO(r.content)).convert('RGB')
-            img.save(img_path, 'JPEG', quality=92)
-            # Guardar en caché
-            subprocess.run(["cp", img_path, cache_path], check=True)
-            print(f"     ✅ Imagen JPG guardada en caché: {os.path.getsize(img_path)//1024}KB")
-            return True
+        if r.status_code != 200:
+            raise Exception(f"HTTP {r.status_code}: {r.text[:200]}")
+
+        # DETECCIÓN INTELIGENTE: ¿JSON (Base64) o Binario?
+        content_type = r.headers.get('Content-Type', '')
+        if 'application/json' in content_type:
+            json_data = r.json()
+            if not json_data.get("success") or "image" not in json_data.get("result", {}):
+                raise Exception(f"JSON sin imagen válida: {json_data}")
+            img_bytes = base64.b64decode(json_data["result"]["image"])
         else:
-            raise Exception(f"Cloudflare HTTP {r.status_code}. Texto: {r.text[:200]}")
+            img_bytes = r.content
+
+        # CONVERSIÓN FINAL A JPG REAL
+        img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+        img.save(img_path, 'JPEG', quality=92)
+        subprocess.run(["cp", img_path, cache_path], check=True)
+        print(f"     ✅ Imagen JPG guardada: {os.path.getsize(img_path)//1024}KB")
+        return True
     except Exception as e:
         print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
         sys.exit(1)
 
 total_video = 0.0
-hashes_generados = []
-
-print("🚀 INICIANDO RENDERIZADO (CON CACHÉ)...")
+hashes = []
 
 for i, escena in enumerate(escenas):
     audio_path = f"audio_{i}.mp3"
@@ -63,19 +68,20 @@ for i, escena in enumerate(escenas):
     audio_dur = get_audio_duration(audio_path)
     scene_duration = audio_dur + 0.4
     total_video += scene_duration
-    print(f"  🎙️ Escena {i+1}: {scene_duration:.2f}s")
 
     img_path = f"public/img_{i}.jpg"
     cache_path = f"cache/img_{i}.jpg"
-    
     generar_imagen_cloudflare(escena["img_prompt"], i, img_path, cache_path)
-    
+
     with open(img_path, 'rb') as f:
-        hashes_generados.append(hashlib.md5(f.read()).hexdigest()[:8])
+        hashes.append(hashlib.md5(f.read()).hexdigest()[:8])
 
     props["scenes"].append({"text": escena["texto"], "audio": audio_path, "image": img_path, "duration": scene_duration})
 
 with open('props.json', 'w') as f:
     json.dump(props, f, indent=2)
 
-print(f"✅ Duración total del video: {total_video:.2f}s")
+print(f"\n📊 Imágenes únicas: {len(set(hashes))}/{len(hashes)}")
+print(f"✅ Duración total: {total_video:.2f}s")
+if len(set(hashes)) != len(hashes):
+    sys.exit(1)
