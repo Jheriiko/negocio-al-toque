@@ -1,28 +1,28 @@
 {
   "escenas": [
     {
-      "texto": "Deja de firmar contratos con tu familia antes de arruinar tu vida.",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, close up of a tense person looking at a suspicious family member signing a contract, dramatic lighting"
+      "texto": "Vendí las botas ortopédicas de mi abuelo para comprar cuero.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, an exhausted old cobbler sitting alone in a dim, empty shoe repair shop holding a small worn-out children's shoe, heavy rain outside the glass window"
     },
     {
-      "texto": "Le di la mitad de mi local de ropa a mi hermano menor confiando en su palabra.",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, two brothers shaking hands inside a busy modern clothing store in Bogota, warm lighting"
+      "texto": "Un zapatero artesano ve cómo las grandes marcas devoran su taller heredado del abuelo.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a tiny cluttered cobbler workshop overshadowed by a giant modern neon storefront next door"
     },
     {
-      "texto": "Cada lunes faltaba mercancía costosa, pero él siempre culpaba a los empleados nuevos.",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, worried store owner looking at empty inventory shelves, suspicious shadows"
+      "texto": "Su hija necesita una cirugía urgente en las piernas y ya no queda un solo peso en la casa.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a worried father looking at a medical bill under the dim glow of a single hanging bulb"
     },
     {
-      "texto": "Instalé cámaras ocultas y descubrí que él mismo sacaba la ropa en bolsas negras de madrugada.",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, security camera footage view of a man sneaking out of a storefront with heavy bags at night"
+      "texto": "Desesperado, desarma el viejo taller y vende hasta las herramientas más queridas para juntar el anticipo.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a man packing up old tools into a cardboard box with tearful eyes, empty shelves behind him"
     },
     {
-      "texto": "Lo peor fue enterarme de que ya había registrado la marca comercial a su nombre en la superintendencia.",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, official legal document stamped with a fraudulent trademark registration, cinematic close up"
+      "texto": "La clínica le cancela la cirugía de última hora porque faltaba una firma de una EPS corrupta.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a desperate father arguing with a receptionist behind a glass window at a sterile hospital desk"
     },
     {
-      "texto": "En los negocios no hay sangre... ¿A qué familiar tuyo le darías el control hoy?",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, a person staring thoughtfully and distrustfully into a mirror holding a smartphone, dramatic close up"
+      "texto": "Un cliente antiguo pasa, ve la escena, le paga el tratamiento completo en silencio y le abraza el alma.",
+      "img_prompt": "Colombian comic book style, 2d animation, warm emotional lighting, vertical 9:16, two men embracing tightly on a rainy sidewalk outside a humble closed shop, cinematic expression of relief"
     }
   ]
 }
