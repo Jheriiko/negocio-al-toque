@@ -1,104 +1,122 @@
-import json, os, subprocess, requests, time, hashlib, sys, io, base64
+import json, os, subprocess, requests, time, io, urllib.parse, sys
 from PIL import Image
+from rich.console import Console
+
+console = Console()
+VOZ_NARRADOR = "es-CO-GonzaloNeural"
+MH_KEY = os.environ.get("MAGIC_HOUR_API_KEY")
+MH_URL = "https://api.magichour.ai/v1"
+POLL_URL = "https://image.pollinations.ai/prompt"
 
 with open('guion.json', 'r') as f:
     data = json.load(f)
 
 escenas = data.get('escenas', [])
-props = {"scenes": []}
 os.makedirs('public', exist_ok=True)
-os.makedirs('cache', exist_ok=True)
-
-VOZ_NARRADOR = "es-CO-GonzaloNeural"
-CF_ACCOUNT = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
-CF_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
-CF_URL = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT}/ai/run/@cf/black-forest-labs/flux-1-schnell"
-
-PROMPT_FALLBACK = "Colombian comic book style, 2d animation, abstract city skyline, blue and grey tones, vertical 9:16, minimalist"
+os.makedirs('clips', exist_ok=True)
 
 def get_audio_duration(path):
-    result = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1", path], capture_output=True, text=True)
-    return float(result.stdout.strip()) if result.stdout.strip() else 3.0
+    r = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1", path], capture_output=True, text=True)
+    return float(r.stdout.strip()) if r.stdout.strip() else 3.0
 
-def llamar_cloudflare(prompt, idx):
-    if not CF_ACCOUNT or not CF_TOKEN:
-        raise Exception("❌ Faltan credenciales de Cloudflare.")
-    headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
-    payload = {"prompt": prompt, "steps": 4}
-    r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
-    if r.status_code != 200:
-        raise Exception(f"HTTP {r.status_code}: {r.text[:300]}")
-    if 'application/json' in r.headers.get('Content-Type', ''):
-        json_data = r.json()
-        if not json_data.get("success") or "image" not in json_data.get("result", {}):
-            raise Exception(f"JSON sin imagen válida: {str(json_data)[:300]}")
-        return base64.b64decode(json_data["result"]["image"])
-    return r.content
+def generar_video_magic_hour(prompt, idx):
+    headers = {"Authorization": f"Bearer {MH_KEY}", "Content-Type": "application/json"}
+    payload = {"model": "wan-2.2", "style": {"prompt": prompt}, "end_seconds": 4, "resolution": "480p", "aspect_ratio": "9:16"}
+    console.print(f"  🎬 Escena {idx+1} → Magic Hour VIDEO...")
+    r = requests.post(f"{MH_URL}/text-to-video", headers=headers, json=payload, timeout=60)
+    if r.status_code not in [200, 201, 202]: raise Exception(f"MH {r.status_code}: {r.text}")
+    pid = r.json().get("id")
+    for _ in range(30):
+        time.sleep(10)
+        sr = requests.get(f"{MH_URL}/video-projects/{pid}", headers=headers, timeout=30)
+        if sr.status_code == 200:
+            sd = sr.json()
+            if sd.get("status") == "complete":
+                vurl = sd.get("download", {}).get("url")
+                vr = requests.get(vurl, timeout=120)
+                vpath = f"clips/clip_{idx}.mp4"
+                with open(vpath, 'wb') as f: f.write(vr.content)
+                return vpath
+            elif sd.get("status") in ["error", "canceled"]: raise Exception(f"MH Error: {sd}")
+    raise Exception("MH Timeout")
 
-def generar_imagen_cloudflare(prompt, idx, img_path, cache_path):
-    if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
-        print(f"  💾 Escena {idx+1} → Caché encontrada.")
-        subprocess.run(["cp", cache_path, img_path], check=True)
-        return True
+def generar_imagen_pollinations(prompt, idx):
+    encoded = urllib.parse.quote(prompt)
+    url = f"{POLL_URL}/{encoded}?width=1080&height=1920&model=flux&nologo=true&seed={int(time.time())%10000}"
+    console.print(f"  🎨 Escena {idx+1} → Pollinations IMAGEN...")
+    for _ in range(3):
+        try:
+            r = requests.get(url, timeout=90)
+            if r.status_code == 200 and len(r.content) > 5000:
+                img = Image.open(io.BytesIO(r.content)).convert('RGB')
+                ipath = f"clips/img_{idx}.jpg"
+                img.save(ipath, 'JPEG', quality=95)
+                return ipath
+        except Exception: pass
+        time.sleep(5)
+    raise Exception(f"Pollinations failed for scene {idx+1}")
 
-    prompt_unico = f"{prompt} (escena {idx+1})"
-    print(f"  ☁️ Escena {idx+1} → Generando...")
-    try:
-        img_bytes = llamar_cloudflare(prompt_unico, idx)
-        img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
-        img.save(img_path, 'JPEG', quality=92)
-        subprocess.run(["cp", img_path, cache_path], check=True)
-        print(f"     ✅ Imagen JPG: {os.path.getsize(img_path)//1024}KB")
-        return True
-    except Exception as e:
-        # SISTEMA DE REINTENTO CON PROMPT DE RESPALDO
-        if "NSFW" in str(e) or "400" in str(e):
-            print(f"     ⚠️ Prompt rechazado por NSFW. Reintentando con prompt de respaldo...")
-            try:
-                img_bytes = llamar_cloudflare(f"{PROMPT_FALLBACK} (escena {idx+1})", idx)
-                img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
-                img.save(img_path, 'JPEG', quality=92)
-                subprocess.run(["cp", img_path, cache_path], check=True)
-                print(f"     ✅ Imagen de respaldo generada: {os.path.getsize(img_path)//1024}KB")
-                return True
-            except Exception as e2:
-                print(f"     ❌ Fallback también falló: {e2}")
-                sys.exit(1)
-        else:
-            print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
-            sys.exit(1)
+def crear_clip_con_ffmpeg(img_path, audio_path, texto, idx, duracion):
+    """Crea un clip de video a partir de una imagen con zoom, viñeta y texto ASS."""
+    ass_path = f"clips/subs_{idx}.ass"
+    # Escapar texto para ASS (muy básico)
+    texto_limpio = texto.replace('\n', ' ').replace('\\', '').replace('{', '').replace('}', '')
+    
+    ass_content = f"""[Script Info]
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,60,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,4,0,2,20,20,200,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:{duracion:05.2f},Default,,0,0,0,,{texto_limpio}
+"""
+    with open(ass_path, 'w') as f: f.write(ass_content)
+    
+    clip_path = f"clips/clip_{idx}.mp4"
+    cmd = [
+        "ffmpeg", "-y", "-loop", "1", "-i", img_path, "-i", audio_path,
+        "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,zoompan=z='min(zoom+0.0015,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={int(duracion*30)}:s=1080x1920:fps=30,vignette=PI/4,ass={ass_path}",
+        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "20",
+        "-c:a", "aac", "-b:a", "192k", "-t", str(duracion), "-pix_fmt", "yuv420p", clip_path
+    ]
+    subprocess.run(cmd, check=True, capture_output=True)
+    return clip_path
 
 total_video = 0.0
-hashes = []
+clip_paths = []
+
+console.print("🚀 INICIANDO PIPELINE FFMPEG PURO...")
 
 for i, escena in enumerate(escenas):
     audio_name = f"audio_{i}.mp3"
-    audio_path = f"public/{audio_name}"
+    audio_path = f"clips/{audio_name}"
     subprocess.run(["edge-tts", "--voice", VOZ_NARRADOR, "--text", escena["texto"], "--write-media", audio_path], check=True)
+    
+    dur = get_audio_duration(audio_path) + 0.4
+    total_video += dur
 
-    audio_dur = get_audio_duration(audio_path)
-    scene_duration = audio_dur + 0.4
-    total_video += scene_duration
+    # 4 videos con Magic Hour, resto con FFmpeg sobre imagen
+    if i < 4:
+        clip_path = generar_video_magic_hour(escena["img_prompt"], i)
+    else:
+        img_path = generar_imagen_pollinations(escena["img_prompt"], i)
+        clip_path = crear_clip_con_ffmpeg(img_path, audio_path, escena["texto"], i, dur)
+        
+    clip_paths.append(clip_path)
 
-    img_name = f"img_{i}.jpg"
-    img_path = f"public/{img_name}"
-    cache_path = f"cache/{img_name}"
-    generar_imagen_cloudflare(escena["img_prompt"], i, img_path, cache_path)
+# Unir todos los clips con FFmpeg
+console.print("🔗 Uniendo todos los clips con FFmpeg...")
+with open("concat_list.txt", "w") as f:
+    for cp in clip_paths:
+        f.write(f"file '{os.path.abspath(cp)}'\n")
 
-    with open(img_path, 'rb') as f:
-        hashes.append(hashlib.md5(f.read()).hexdigest()[:8])
+subprocess.run([
+    "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", "concat_list.txt",
+    "-c", "copy", "video_final.mp4"
+], check=True)
 
-    props["scenes"].append({
-        "text": escena["texto"],
-        "audio": audio_name,
-        "image": img_name,
-        "duration": scene_duration
-    })
-
-with open('props.json', 'w') as f:
-    json.dump(props, f, indent=2)
-
-print(f"\n📊 Imágenes únicas: {len(set(hashes))}/{len(hashes)}")
-print(f"✅ Duración total: {total_video:.2f}s")
-if len(set(hashes)) != len(hashes):
-    sys.exit(1)
+console.print(f"✅ VIDEO FINAL GENERADO: video_final.mp4 ({total_video:.2f}s)")
