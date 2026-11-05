@@ -13,13 +13,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Instalar dependencias
+      - name: Instalar Dependencias
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg google-chrome-stable
           pip install edge-tts requests
-          npm install
-      - name: Generar Assets
+      - name: Instalar Node Dependencies
+        run: npm install
+      - name: Generar Assets (Cloudflare FLUX.1)
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: python render_cloud.py
       - name: Renderizar Video
         run: npx remotion render src/index.ts TechUcronia video_final.mp4 --props=props.json
