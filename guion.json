@@ -1,18 +1,60 @@
 {
   "escenas": [
-    {"texto": "Mi propio hermano me firmó la estafa que hoy me deja en la calle.", "img_prompt": "Colombian comic book style, 2d animation, harsh morning sunlight, vertical 9:16, a worried old man reading a legal notice taped to a rusted metal gate"},
-    {"texto": "Hace diez años me levantaba a las cuatro de la mañana a construir esta casa ladrillo a ladrillo.", "img_prompt": "Colombian comic book style, 2d animation, warm nostalgic tones, vertical 9:16, a hardworking man carrying bricks in a humble neighborhood"},
-    {"texto": "Un día llegó mi hermano menor pidiendo ayuda con una deuda que supuestamente se pagaba sola.", "img_prompt": "Colombian comic book style, 2d animation, emotional lighting, vertical 9:16, two brothers talking anxiously in a small living room"},
-    {"texto": "Confié ciegamente. Puse la firma en la notaría porque era de mi propia sangre.", "img_prompt": "Colombian comic book style, 2d animation, dramatic shadow, vertical 9:16, a hand signing a formal document with a pen on a wooden desk"},
-    {"texto": "Los primeros meses todo marchaba bien en su taller de mecánica.", "img_prompt": "Colombian comic book style, 2d animation, working environment, vertical 9:16, a busy mechanic workshop in a Colombian street"},
-    {"texto": "Hasta que empezaron los silencios, las llamadas que no entran y el local cerrado con candado.", "img_prompt": "Colombian comic book style, 2d animation, melancholic mood, vertical 9:16, a locked metal gate with a heavy padlock in an empty alley"},
-    {"texto": "Un sobre certificado llegó: la deuda pasó a cobro jurídico directo sobre mi casa.", "img_prompt": "Colombian comic book style, 2d animation, tense atmosphere, vertical 9:16, an official envelope resting on a worn kitchen table"},
-    {"texto": "Busqué respuestas con el resto de la familia, pero todos decidieron mirar hacia otro lado.", "img_prompt": "Colombian comic book style, 2d animation, cold lighting, vertical 9:16, an isolated man looking down on a dimly lit sidewalk"},
-    {"texto": "Los cobradores empezaron a golpear la reja, exigiendo las escrituras públicas.", "img_prompt": "Colombian comic book style, 2d animation, tense nighttime shadows, vertical 9:16, aggressive silhouettes knocking on a residential door at night"},
-    {"texto": "Mi esposa comenzó a guardar los recuerdos de toda una vida en cajas de cartón.", "img_prompt": "Colombian comic book style, 2d animation, sorrowful mood, vertical 9:16, an elderly woman packing items inside cardboard boxes"},
-    {"texto": "Ver la mirada de mis hijos sabiendo que perderán su hogar duele más que los golpes.", "img_prompt": "Colombian comic book style, 2d animation, emotional close-up, vertical 9:16, tearful eyes looking through a living room window"},
-    {"texto": "Me senté solo en la sala vacía, pensando en el peso fatal de una firma prestada.", "img_prompt": "Colombian comic book style, 2d animation, empty room, vertical 9:16, a lonely man sitting on the floor in an empty house"},
-    {"texto": "La peor traición no viene de un extraño, sino de quien compartió el mismo techo de niño.", "img_prompt": "Colombian comic book style, 2d animation, deep shadow tones, vertical 9:16, old framed family photos hanging crooked on a bare wall"},
-    {"texto": "En este país la sangre pesa, pero la ambición pesa más. Comenta si tú habrías puesto la firma por un hermano.", "img_prompt": "Colombian comic book style, 2d animation, twilight view, vertical 9:16, silhouette of a heartbroken man standing under a dim street lamp"}
+    {
+      "texto": "Mi propio hermano me firmó la estafa que hoy me deja en la calle.",
+      "img_prompt": "Colombian comic book style, 2d animation, harsh morning sunlight, vertical 9:16, a worried old man reading a legal notice taped to a rusted metal gate"
+    },
+    {
+      "texto": "Hace diez años me levantaba a las cuatro de la mañana a construir esta casa ladrillo a ladrillo.",
+      "img_prompt": "Colombian comic book style, 2d animation, warm nostalgic tones, vertical 9:16, a hardworking man carrying bricks in a humble neighborhood"
+    },
+    {
+      "texto": "Un día llegó mi hermano menor pidiendo ayuda con una deuda que supuestamente se pagaba sola.",
+      "img_prompt": "Colombian comic book style, 2d animation, emotional lighting, vertical 9:16, two brothers talking anxiously in a small living room"
+    },
+    {
+      "texto": "Confié ciegamente. Puse la firma en la notaría porque era de mi propia sangre.",
+      "img_prompt": "Colombian comic book style, 2d animation, dramatic shadow, vertical 9:16, a hand signing a formal document with a pen on a wooden desk"
+    },
+    {
+      "texto": "Los primeros meses todo marchaba bien en su taller de mecánica.",
+      "img_prompt": "Colombian comic book style, 2d animation, working environment, vertical 9:16, a busy mechanic workshop in a Colombian street"
+    },
+    {
+      "texto": "Hasta que empezaron los silencios, las llamadas que no entran y el local cerrado con candado.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic mood, vertical 9:16, a locked metal gate with a heavy padlock in an empty alley"
+    },
+    {
+      "texto": "Un sobre certificado llegó: la deuda pasó a cobro jurídico directo sobre mi casa.",
+      "img_prompt": "Colombian comic book style, 2d animation, tense atmosphere, vertical 9:16, an official envelope resting on a worn kitchen table"
+    },
+    {
+      "texto": "Busqué respuestas con el resto de la familia, pero todos decidieron mirar hacia otro lado.",
+      "img_prompt": "Colombian comic book style, 2d animation, blue tones, vertical 9:16, a silhouette of a man standing by a city wall at dusk, calm atmosphere"
+    },
+    {
+      "texto": "Los cobradores empezaron a golpear la reja, exigiendo las escrituras públicas.",
+      "img_prompt": "Colombian comic book style, 2d animation, tense nighttime shadows, vertical 9:16, aggressive silhouettes knocking on a residential door at night"
+    },
+    {
+      "texto": "Mi esposa comenzó a guardar los recuerdos de toda una vida en cajas de cartón.",
+      "img_prompt": "Colombian comic book style, 2d animation, sorrowful mood, vertical 9:16, an elderly woman packing items inside cardboard boxes"
+    },
+    {
+      "texto": "Ver la mirada de mis hijos sabiendo que perderán su hogar duele más que los golpes.",
+      "img_prompt": "Colombian comic book style, 2d animation, emotional close-up, vertical 9:16, tearful eyes looking through a living room window"
+    },
+    {
+      "texto": "Me senté solo en la sala vacía, pensando en el peso fatal de una firma prestada.",
+      "img_prompt": "Colombian comic book style, 2d animation, empty room, vertical 9:16, a lonely man sitting on the floor in an empty house"
+    },
+    {
+      "texto": "La peor traición no viene de un extraño, sino de quien compartió el mismo techo de niño.",
+      "img_prompt": "Colombian comic book style, 2d animation, deep shadow tones, vertical 9:16, old framed family photos hanging crooked on a bare wall"
+    },
+    {
+      "texto": "En este país la sangre pesa, pero la ambición pesa más. Comenta si tú habrías puesto la firma por un hermano.",
+      "img_prompt": "Colombian comic book style, 2d animation, twilight view, vertical 9:16, silhouette of a heartbroken man standing under a dim street lamp"
+    }
   ]
 }

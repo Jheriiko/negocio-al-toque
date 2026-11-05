@@ -14,9 +14,26 @@ CF_ACCOUNT = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
 CF_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
 CF_URL = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT}/ai/run/@cf/black-forest-labs/flux-1-schnell"
 
+PROMPT_FALLBACK = "Colombian comic book style, 2d animation, abstract city skyline, blue and grey tones, vertical 9:16, minimalist"
+
 def get_audio_duration(path):
     result = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1", path], capture_output=True, text=True)
     return float(result.stdout.strip()) if result.stdout.strip() else 3.0
+
+def llamar_cloudflare(prompt, idx):
+    if not CF_ACCOUNT or not CF_TOKEN:
+        raise Exception("❌ Faltan credenciales de Cloudflare.")
+    headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
+    payload = {"prompt": prompt, "steps": 4}
+    r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
+    if r.status_code != 200:
+        raise Exception(f"HTTP {r.status_code}: {r.text[:300]}")
+    if 'application/json' in r.headers.get('Content-Type', ''):
+        json_data = r.json()
+        if not json_data.get("success") or "image" not in json_data.get("result", {}):
+            raise Exception(f"JSON sin imagen válida: {str(json_data)[:300]}")
+        return base64.b64decode(json_data["result"]["image"])
+    return r.content
 
 def generar_imagen_cloudflare(prompt, idx, img_path, cache_path):
     if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
@@ -24,36 +41,32 @@ def generar_imagen_cloudflare(prompt, idx, img_path, cache_path):
         subprocess.run(["cp", cache_path, img_path], check=True)
         return True
 
-    if not CF_ACCOUNT or not CF_TOKEN:
-        raise Exception("❌ Faltan credenciales de Cloudflare.")
-
-    headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
-    prompt_unico = f"{prompt} (escena {idx+1}, variación {int(time.time()) % 10000})"
-    payload = {"prompt": prompt_unico, "steps": 4}
-
+    prompt_unico = f"{prompt} (escena {idx+1})"
     print(f"  ☁️ Escena {idx+1} → Generando...")
     try:
-        r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
-        if r.status_code != 200:
-            raise Exception(f"HTTP {r.status_code}: {r.text[:200]}")
-
-        content_type = r.headers.get('Content-Type', '')
-        if 'application/json' in content_type:
-            json_data = r.json()
-            if not json_data.get("success") or "image" not in json_data.get("result", {}):
-                raise Exception(f"JSON sin imagen válida: {json_data}")
-            img_bytes = base64.b64decode(json_data["result"]["image"])
-        else:
-            img_bytes = r.content
-
+        img_bytes = llamar_cloudflare(prompt_unico, idx)
         img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
         img.save(img_path, 'JPEG', quality=92)
         subprocess.run(["cp", img_path, cache_path], check=True)
         print(f"     ✅ Imagen JPG: {os.path.getsize(img_path)//1024}KB")
         return True
     except Exception as e:
-        print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
-        sys.exit(1)
+        # SISTEMA DE REINTENTO CON PROMPT DE RESPALDO
+        if "NSFW" in str(e) or "400" in str(e):
+            print(f"     ⚠️ Prompt rechazado por NSFW. Reintentando con prompt de respaldo...")
+            try:
+                img_bytes = llamar_cloudflare(f"{PROMPT_FALLBACK} (escena {idx+1})", idx)
+                img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+                img.save(img_path, 'JPEG', quality=92)
+                subprocess.run(["cp", img_path, cache_path], check=True)
+                print(f"     ✅ Imagen de respaldo generada: {os.path.getsize(img_path)//1024}KB")
+                return True
+            except Exception as e2:
+                print(f"     ❌ Fallback también falló: {e2}")
+                sys.exit(1)
+        else:
+            print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
+            sys.exit(1)
 
 total_video = 0.0
 hashes = []
@@ -75,7 +88,6 @@ for i, escena in enumerate(escenas):
     with open(img_path, 'rb') as f:
         hashes.append(hashlib.md5(f.read()).hexdigest()[:8])
 
-    # SOLO el nombre del archivo, sin "public/"
     props["scenes"].append({
         "text": escena["texto"],
         "audio": audio_name,
