@@ -4,46 +4,22 @@ from rich.console import Console
 
 console = Console()
 VOZ_NARRADOR = "es-CO-GonzaloNeural"
-MH_KEY = os.environ.get("MAGIC_HOUR_API_KEY")
-MH_URL = "https://api.magichour.ai/v1"
 POLL_URL = "https://image.pollinations.ai/prompt"
 
 with open('guion.json', 'r') as f:
     data = json.load(f)
 
 escenas = data.get('escenas', [])
-os.makedirs('public', exist_ok=True)
 os.makedirs('clips', exist_ok=True)
 
 def get_audio_duration(path):
     r = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1", path], capture_output=True, text=True)
     return float(r.stdout.strip()) if r.stdout.strip() else 3.0
 
-def generar_video_magic_hour(prompt, idx):
-    headers = {"Authorization": f"Bearer {MH_KEY}", "Content-Type": "application/json"}
-    payload = {"model": "wan-2.2", "style": {"prompt": prompt}, "end_seconds": 4, "resolution": "480p", "aspect_ratio": "9:16"}
-    console.print(f"  🎬 Escena {idx+1} → Magic Hour VIDEO...")
-    r = requests.post(f"{MH_URL}/text-to-video", headers=headers, json=payload, timeout=60)
-    if r.status_code not in [200, 201, 202]: raise Exception(f"MH {r.status_code}: {r.text}")
-    pid = r.json().get("id")
-    for _ in range(30):
-        time.sleep(10)
-        sr = requests.get(f"{MH_URL}/video-projects/{pid}", headers=headers, timeout=30)
-        if sr.status_code == 200:
-            sd = sr.json()
-            if sd.get("status") == "complete":
-                vurl = sd.get("download", {}).get("url")
-                vr = requests.get(vurl, timeout=120)
-                vpath = f"clips/clip_{idx}.mp4"
-                with open(vpath, 'wb') as f: f.write(vr.content)
-                return vpath
-            elif sd.get("status") in ["error", "canceled"]: raise Exception(f"MH Error: {sd}")
-    raise Exception("MH Timeout")
-
 def generar_imagen_pollinations(prompt, idx):
     encoded = urllib.parse.quote(prompt)
     url = f"{POLL_URL}/{encoded}?width=1080&height=1920&model=flux&nologo=true&seed={int(time.time())%10000}"
-    console.print(f"  🎨 Escena {idx+1} → Pollinations IMAGEN...")
+    console.print(f"  🎨 Escena {idx+1} → Descargando imagen...")
     for _ in range(3):
         try:
             r = requests.get(url, timeout=90)
@@ -54,13 +30,12 @@ def generar_imagen_pollinations(prompt, idx):
                 return ipath
         except Exception: pass
         time.sleep(5)
-    raise Exception(f"Pollinations failed for scene {idx+1}")
+    raise Exception(f"Pollinations falló en escena {idx+1}")
 
 def crear_clip_con_ffmpeg(img_path, audio_path, texto, idx, duracion):
-    """Crea un clip de video a partir de una imagen con zoom, viñeta y texto ASS."""
     ass_path = f"clips/subs_{idx}.ass"
-    # Escapar texto para ASS (muy básico)
-    texto_limpio = texto.replace('\n', ' ').replace('\\', '').replace('{', '').replace('}', '')
+    # Limpieza básica de texto para ASS
+    texto_limpio = texto.replace('\n', ' ').replace('\\', '').replace('{', '').replace('}', '').replace(',', '')
     
     ass_content = f"""[Script Info]
 PlayResX: 1080
@@ -68,7 +43,7 @@ PlayResY: 1920
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Arial,60,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,4,0,2,20,20,200,1
+Style: Default,Arial,65,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,5,0,2,20,20,200,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -77,6 +52,7 @@ Dialogue: 0,0:00:00.00,0:00:{duracion:05.2f},Default,,0,0,0,,{texto_limpio}
     with open(ass_path, 'w') as f: f.write(ass_content)
     
     clip_path = f"clips/clip_{idx}.mp4"
+    # Zoom cinematográfico + Viñeta + ASS (Texto)
     cmd = [
         "ffmpeg", "-y", "-loop", "1", "-i", img_path, "-i", audio_path,
         "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,zoompan=z='min(zoom+0.0015,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={int(duracion*30)}:s=1080x1920:fps=30,vignette=PI/4,ass={ass_path}",
@@ -89,7 +65,7 @@ Dialogue: 0,0:00:00.00,0:00:{duracion:05.2f},Default,,0,0,0,,{texto_limpio}
 total_video = 0.0
 clip_paths = []
 
-console.print("🚀 INICIANDO PIPELINE FFMPEG PURO...")
+console.print("🚀 INICIANDO PIPELINE FFMPEG PURO (POLLINATIONS + ZOOM + TEXTO)...")
 
 for i, escena in enumerate(escenas):
     audio_name = f"audio_{i}.mp3"
@@ -99,17 +75,12 @@ for i, escena in enumerate(escenas):
     dur = get_audio_duration(audio_path) + 0.4
     total_video += dur
 
-    # 4 videos con Magic Hour, resto con FFmpeg sobre imagen
-    if i < 4:
-        clip_path = generar_video_magic_hour(escena["img_prompt"], i)
-    else:
-        img_path = generar_imagen_pollinations(escena["img_prompt"], i)
-        clip_path = crear_clip_con_ffmpeg(img_path, audio_path, escena["texto"], i, dur)
-        
+    img_path = generar_imagen_pollinations(escena["img_prompt"], i)
+    clip_path = crear_clip_con_ffmpeg(img_path, audio_path, escena["texto"], i, dur)
     clip_paths.append(clip_path)
 
-# Unir todos los clips con FFmpeg
-console.print("🔗 Uniendo todos los clips con FFmpeg...")
+# Unir todos los clips
+console.print("🔗 Uniendo todos los clips...")
 with open("concat_list.txt", "w") as f:
     for cp in clip_paths:
         f.write(f"file '{os.path.abspath(cp)}'\n")
