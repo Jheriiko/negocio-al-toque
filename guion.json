@@ -1,28 +1,28 @@
 {
   "escenas": [
     {
-      "texto": "Mi hija necesita una cirugía. Y me faltan 5 millones.",
-      "img_prompt": "Colombian comic book style, 2d animation, dramatic lighting, vertical 9:16, a desperate mother looking at a medical bill with tears in her eyes"
+      "texto": "Un sobre amarillo llegó a la miscelánea. La cuenta amaneció congelada.",
+      "img_prompt": "Colombian comic book style, 2d animation, tense lighting, vertical 9:16, a worried shopkeeper looking at an official notice letter"
     },
     {
-      "texto": "Tengo un local de empanadas. Es mi único sustento.",
-      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, a small humble empanada stand in a barrio, warm light"
+      "texto": "Diez años levantándome a las cuatro de la mañana a surtir el negocio.",
+      "img_prompt": "Colombian comic book style, 2d animation, warm morning light, vertical 9:16, a small humble grocery store in a Colombian barrio"
     },
     {
-      "texto": "Empecé a vender todo. La freidora, las mesas, la nevera.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a woman sadly packing up her business into boxes, empty shelves"
+      "texto": "Todo por un error de facturación que nunca supe cómo arreglar.",
+      "img_prompt": "Colombian comic book style, 2d animation, frustrated expression, vertical 9:16, a man surrounded by piles of tax papers and invoices"
     },
     {
-      "texto": "El dueño del local me dio 3 días para desalojar.",
-      "img_prompt": "Colombian comic book style, 2d animation, tense atmosphere, vertical 9:16, a landlord handing an eviction notice to a crying woman"
+      "texto": "Pusieron sellos de embargo en la reja. No hay cómo pagarle a los proveedores.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic mood, vertical 9:16, heavy official red seals on a small neighborhood shop door"
     },
     {
-      "texto": "Pero mis vecinos del barrio hicieron algo que no esperaba.",
-      "img_prompt": "Colombian comic book style, 2d animation, warm emotional lighting, vertical 9:16, a community of neighbors putting money in a box for a woman"
+      "texto": "Ni un peso para la medicina de mi esposa.",
+      "img_prompt": "Colombian comic book style, 2d animation, emotional shadow lighting, vertical 9:16, an elderly worker looking worried inside a dark house"
     },
     {
-      "texto": "La cirugía fue un éxito. Y el barrio me salvó la vida.",
-      "img_prompt": "Colombian comic book style, 2d animation, joyful emotional lighting, vertical 9:16, a mother hugging her daughter in a hospital bed, surrounded by neighbors"
+      "texto": "El papel frío no entiende de sudor ni de trabajo honrado.",
+      "img_prompt": "Colombian comic book style, 2d animation, dramatic lighting, vertical 9:16, a tired worker sitting alone with his head in his hands"
     }
   ]
 }
