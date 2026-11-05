@@ -1,28 +1,76 @@
 {
   "escenas": [
     {
-      "texto": "Un sobre amarillo lleg\u00f3 a la miscel\u00e1nea. La cuenta amaneci\u00f3 congelada.",
-      "img_prompt": "Colombian comic book style, 2d animation, tense lighting, vertical 9:16, a worried shopkeeper looking at an official notice letter"
+      "texto": "Do\u00f1a Luz mira fijamente el tel\u00e9fono apagado. Treinta familias confiaron en ella.",
+      "img_prompt": "Colombian comic book style, 2d animation, tense lighting, vertical 9:16, a stressed woman staring at a dead smartphone screen in a humble living room"
     },
     {
-      "texto": "Diez a\u00f1os levant\u00e1ndome a las cuatro de la ma\u00f1ana a surtir el negocio.",
-      "img_prompt": "Colombian comic book style, 2d animation, warm morning light, vertical 9:16, a small humble grocery store in a Colombian barrio"
+      "texto": "Son m\u00e1s de 15 millones de pesos de la tanda que ya no est\u00e1n.",
+      "img_prompt": "Colombian comic book style, 2d animation, dramatic shadow, vertical 9:16, piles of empty savings envelopes on a worn wooden table"
     },
     {
-      "texto": "Todo por un error de facturaci\u00f3n que nunca supe c\u00f3mo arreglar.",
-      "img_prompt": "Colombian comic book style, 2d animation, frustrated expression, vertical 9:16, a man surrounded by piles of tax papers and invoices"
+      "texto": "En la puerta, a las seis de la ma\u00f1ana, ya toca don Mario exigiendo su plata.",
+      "img_prompt": "Colombian comic book style, 2d animation, morning light, vertical 9:16, an angry neighbor knocking hard on a metal security gate of a house"
     },
     {
-      "texto": "Pusieron sellos de embargo en la reja. No hay c\u00f3mo pagarle a los proveedores.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic mood, vertical 9:16, heavy official red seals on a small neighborhood shop door"
+      "texto": "Luz lleva quince a\u00f1os siendo la fiadora moral de toda la cuadra.",
+      "img_prompt": "Colombian comic book style, 2d animation, warm nostalgic tones, vertical 9:16, a humble neighborhood street in Colombia with small grocery stores"
     },
     {
-      "texto": "Ni un peso para la medicina de mi esposa.",
-      "img_prompt": "Colombian comic book style, 2d animation, emotional shadow lighting, vertical 9:16, an elderly worker looking worried inside a dark house"
+      "texto": "Nunca le ha quedado mal a nadie. Su vida empieza a las tres de la ma\u00f1ana.",
+      "img_prompt": "Colombian comic book style, 2d animation, early morning fog, vertical 9:16, a woman cooking tamales over a gas stove in a dark kitchen"
     },
     {
-      "texto": "El papel fr\u00edo no entiende de sudor ni de trabajo honrado.",
-      "img_prompt": "Colombian comic book style, 2d animation, dramatic lighting, vertical 9:16, a tired worker sitting alone with his head in his hands"
+      "texto": "Fritando empanadas y amasando arepas para pagar los servicios y sobrevivir.",
+      "img_prompt": "Colombian comic book style, 2d animation, warm vapor, vertical 9:16, hands working dough with effort and sweat"
+    },
+    {
+      "texto": "La tanda era una red de confianza donde el pobre se ayuda con el pobre.",
+      "img_prompt": "Colombian comic book style, 2d animation, community spirit, vertical 9:16, smiling neighbors handing cash envelopes in an alley"
+    },
+    {
+      "texto": "Ella meti\u00f3 las manos al fuego por Maritza, la vecina de la esquina.",
+      "img_prompt": "Colombian comic book style, 2d animation, subtle tension, vertical 9:16, two women talking over a fence in a Colombian barrio"
+    },
+    {
+      "texto": "Maritza supuestamente administraba la cuenta digital de los \u00faltimos meses.",
+      "img_prompt": "Colombian comic book style, 2d animation, digital focus, vertical 9:16, a person looking intently at a modern smartphone screen"
+    },
+    {
+      "texto": "El viernes en la noche, el grupo de WhatsApp desapareci\u00f3 sin dejar rastro.",
+      "img_prompt": "Colombian comic book style, 2d animation, dark digital glitch effect, vertical 9:16, a smartphone screen showing an empty deleted chat group"
+    },
+    {
+      "texto": "Maritza se mud\u00f3 de madrugada con maletas y el producido completo.",
+      "img_prompt": "Colombian comic book style, 2d animation, midnight shadows, vertical 9:16, a taxi driving away in a dark narrow street carrying suitcases"
+    },
+    {
+      "texto": "Cuando los vecinos se enteraron, la rabia no fue contra la que huy\u00f3...",
+      "img_prompt": "Colombian comic book style, 2d animation, angry crowd, vertical 9:16, frustrated neighbors gathering outside a house talking loudly"
+    },
+    {
+      "texto": "Sino hacia la casa de Luz, porque fue ella quien los invit\u00f3 a meter la plata.",
+      "img_prompt": "Colombian comic book style, 2d animation, hostile atmosphere, vertical 9:16, pointing fingers and shouting at a closed door"
+    },
+    {
+      "texto": "La gente empez\u00f3 a cobrar cuentas y a mirarla con desconfianza absoluta.",
+      "img_prompt": "Colombian comic book style, 2d animation, cold harsh lighting, vertical 9:16, cold stares from familiar faces in the neighborhood"
+    },
+    {
+      "texto": "La honra de quince a\u00f1os se derrumb\u00f3 en una sola y amarga tarde.",
+      "img_prompt": "Colombian comic book style, 2d animation, dramatic breakdown, vertical 9:16, a woman sitting alone with her head buried in her hands"
+    },
+    {
+      "texto": "No hay un seguro que la respalde ni banco que le perdone la deuda.",
+      "img_prompt": "Colombian comic book style, 2d animation, empty room, vertical 9:16, silence in a dark abandoned-feeling kitchen"
+    },
+    {
+      "texto": "En el barrio la pobreza es dura, pero perder la palabra empe\u00f1ada...",
+      "img_prompt": "Colombian comic book style, 2d animation, emotional close-up, vertical 9:16, tearful eyes looking through a window at the rainy street"
+    },
+    {
+      "texto": "Es lo \u00fanico que de verdad te mata en vida. Comparte si sabes lo que vale la palabra.",
+      "img_prompt": "Colombian comic book style, 2d animation, fading light, vertical 9:16, silhouette of a lonely woman standing under a dim street lamp"
     }
   ]
 }
