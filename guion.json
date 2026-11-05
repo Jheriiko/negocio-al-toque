@@ -1,10 +1,28 @@
 {
   "escenas": [
-    {"texto": "Parcero, ¿usted se acuerda cuando nos metíamos a vender maní en el semáforo?"},
-    {"texto": "Claro, hacíamos como 50 lucas al día. Pero nos daba pereza madrugar."},
-    {"texto": "Pues imagínese que ahora todo se hace por internet. ¡Plata fácil!"},
-    {"texto": "¿Y uno sin saber de sistemas? Tranquilo, el negocio al toque es la vuelta."},
-    {"texto": "Es tan fácil que hasta el perro de la casa podría vender."},
-    {"texto": "Comenta 'AL TOQUE' si quiere aprender a generar ingresos sin moverse."}
+    {
+      "texto": "Deja de firmar contratos con tu familia antes de arruinar tu vida.",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, close up of a tense person looking at a suspicious family member signing a contract, dramatic lighting"
+    },
+    {
+      "texto": "Le di la mitad de mi local de ropa a mi hermano menor confiando en su palabra.",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, two brothers shaking hands inside a busy modern clothing store in Bogota, warm lighting"
+    },
+    {
+      "texto": "Cada lunes faltaba mercancía costosa, pero él siempre culpaba a los empleados nuevos.",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, worried store owner looking at empty inventory shelves, suspicious shadows"
+    },
+    {
+      "texto": "Instalé cámaras ocultas y descubrí que él mismo sacaba la ropa en bolsas negras de madrugada.",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, security camera footage view of a man sneaking out of a storefront with heavy bags at night"
+    },
+    {
+      "texto": "Lo peor fue enterarme de que ya había registrado la marca comercial a su nombre en la superintendencia.",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, official legal document stamped with a fraudulent trademark registration, cinematic close up"
+    },
+    {
+      "texto": "En los negocios no hay sangre... ¿A qué familiar tuyo le darías el control hoy?",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, a person staring thoughtfully and distrustfully into a mirror holding a smartphone, dramatic close up"
+    }
   ]
 }
