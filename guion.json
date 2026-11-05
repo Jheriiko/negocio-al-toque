@@ -1,60 +1,14 @@
 {
   "escenas": [
-    {
-      "texto": "Mi propio hermano me firmó la estafa que hoy me deja en la calle.",
-      "img_prompt": "Colombian comic book style, 2d animation, harsh morning sunlight, vertical 9:16, a worried old man reading a legal notice taped to a rusted metal gate"
-    },
-    {
-      "texto": "Hace diez años me levantaba a las cuatro de la mañana a construir esta casa ladrillo a ladrillo.",
-      "img_prompt": "Colombian comic book style, 2d animation, warm nostalgic tones, vertical 9:16, a hardworking man carrying bricks in a humble neighborhood"
-    },
-    {
-      "texto": "Un día llegó mi hermano menor pidiendo ayuda con una deuda que supuestamente se pagaba sola.",
-      "img_prompt": "Colombian comic book style, 2d animation, emotional lighting, vertical 9:16, two brothers talking anxiously in a small living room"
-    },
-    {
-      "texto": "Confié ciegamente. Puse la firma en la notaría porque era de mi propia sangre.",
-      "img_prompt": "Colombian comic book style, 2d animation, dramatic shadow, vertical 9:16, a hand signing a formal document with a pen on a wooden desk"
-    },
-    {
-      "texto": "Los primeros meses todo marchaba bien en su taller de mecánica.",
-      "img_prompt": "Colombian comic book style, 2d animation, working environment, vertical 9:16, a busy mechanic workshop in a Colombian street"
-    },
-    {
-      "texto": "Hasta que empezaron los silencios, las llamadas que no entran y el local cerrado con candado.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic mood, vertical 9:16, a locked metal gate with a heavy padlock in an empty alley"
-    },
-    {
-      "texto": "Un sobre certificado llegó: la deuda pasó a cobro jurídico directo sobre mi casa.",
-      "img_prompt": "Colombian comic book style, 2d animation, tense atmosphere, vertical 9:16, an official envelope resting on a worn kitchen table"
-    },
-    {
-      "texto": "Busqué respuestas con el resto de la familia, pero todos decidieron mirar hacia otro lado.",
-      "img_prompt": "Colombian comic book style, 2d animation, blue tones, vertical 9:16, a silhouette of a man standing by a city wall at dusk, calm atmosphere"
-    },
-    {
-      "texto": "Los cobradores empezaron a golpear la reja, exigiendo las escrituras públicas.",
-      "img_prompt": "Colombian comic book style, 2d animation, tense nighttime shadows, vertical 9:16, aggressive silhouettes knocking on a residential door at night"
-    },
-    {
-      "texto": "Mi esposa comenzó a guardar los recuerdos de toda una vida en cajas de cartón.",
-      "img_prompt": "Colombian comic book style, 2d animation, sorrowful mood, vertical 9:16, an elderly woman packing items inside cardboard boxes"
-    },
-    {
-      "texto": "Ver la mirada de mis hijos sabiendo que perderán su hogar duele más que los golpes.",
-      "img_prompt": "Colombian comic book style, 2d animation, emotional close-up, vertical 9:16, tearful eyes looking through a living room window"
-    },
-    {
-      "texto": "Me senté solo en la sala vacía, pensando en el peso fatal de una firma prestada.",
-      "img_prompt": "Colombian comic book style, 2d animation, empty room, vertical 9:16, a lonely man sitting on the floor in an empty house"
-    },
-    {
-      "texto": "La peor traición no viene de un extraño, sino de quien compartió el mismo techo de niño.",
-      "img_prompt": "Colombian comic book style, 2d animation, deep shadow tones, vertical 9:16, old framed family photos hanging crooked on a bare wall"
-    },
-    {
-      "texto": "En este país la sangre pesa, pero la ambición pesa más. Comenta si tú habrías puesto la firma por un hermano.",
-      "img_prompt": "Colombian comic book style, 2d animation, twilight view, vertical 9:16, silhouette of a heartbroken man standing under a dim street lamp"
-    }
+    {"texto": "Doña Rosa lleva veinte años abriendo su puesto de tamales antes de que salga el sol.", "img_prompt": "Colombian comic book style, 2d animation, early morning fog, vertical 9:16, an elderly woman lighting a traditional stove in a humble market stall"},
+    {"texto": "Cada moneda la ahorraba para pagar los costosos medicamentos de su nieto enfermo.", "img_prompt": "Colombian comic book style, 2d animation, warm emotional lighting, vertical 9:16, a grandmother looking worried next to a small bed in a modest room"},
+    {"texto": "Para surtir el negocio, tuvo que caer en la pesadilla del gota a gota.", "img_prompt": "Colombian comic book style, 2d animation, dark tense shadows, vertical 9:16, a harsh-looking man collecting cash on a busy street corner"},
+    {"texto": "Pagaba la cuota diaria religiosamente, sin faltar un solo día del mes.", "img_prompt": "Colombian comic book style, 2d animation, street market daytime, vertical 9:16, hands exchanging money over a wooden counter filled with food"},
+    {"texto": "Pero un lunes, una urgencia médica en el hospital la retrasó una hora con el pago.", "img_prompt": "Colombian comic book style, 2d animation, sterile hospital light, vertical 9:16, a worried grandmother looking at her old mobile phone in a corridor"},
+    {"texto": "Los cobradores llegaron al puesto buscando sangre y venganza por la demora.", "img_prompt": "Colombian comic book style, 2d animation, threatening atmosphere, vertical 9:16, two aggressive men on a motorcycle stopping abruptly in front of a small food stall"},
+    {"texto": "Sin mediar palabra, le tumbaron la olla de tamales hirviendo al suelo frente a todos.", "img_prompt": "Colombian comic book style, 2d animation, violent motion blur, vertical 9:16, hot steam and spilled food on the concrete street amid shattered ceramic"},
+    {"texto": "Le robaron el producido del día y rompieron la vitrina a patadas de rabia.", "img_prompt": "Colombian comic book style, 2d animation, harsh dramatic angles, vertical 9:16, a broken glass display case and scattered belongings on the ground"},
+    {"texto": "Mientras lloraba agachada, le gritaron que mañana le quemaban el puesto si no pagaban el doble.", "img_prompt": "Colombian comic book style, 2d animation, cruel shadows, vertical 9:16, a crying elderly woman on the pavement while a motorcycle speeds away"},
+    {"texto": "En nuestras calles el trabajo honrado sobrevive, mientras la ley del gota a gota asfixia al pobre. Comenta si alguna vez has visto esta injusticia.", "img_prompt": "Colombian comic book style, 2d animation, twilight sorrowful light, vertical 9:16, silhouette of a lonely grandmother standing among ruins under a dim street lamp"}
   ]
 }
