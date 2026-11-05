@@ -1,4 +1,4 @@
-import json, os, subprocess, requests, urllib.parse
+import json, os, subprocess, requests, time, hashlib, sys
 
 with open('guion.json', 'r') as f:
     data = json.load(f)
@@ -8,44 +8,85 @@ props = {"scenes": []}
 os.makedirs('public', exist_ok=True)
 
 VOZ_NARRADOR = "es-CO-GonzaloNeural"
-prompts_comic = [
-    "colombian comic book style, 2d animation, two latin male friends talking on a street bench, vibrant colors, barrio background, vertical 9:16",
-    "colombian comic book style, 2d animation, close up of hands drawing numbers on a napkin, gold peso signs, vertical 9:16",
-    "colombian comic book style, 2d animation, latin man looking shocked, holding a calculator, comic expression, vertical 9:16",
-    "colombian comic book style, 2d animation, two friends happily selling at a colorful street stall, vibrant, vertical 9:16",
-    "colombian comic book style, 2d animation, funny comic dog with glasses working on a laptop, vertical 9:16",
-    "colombian comic book style, 2d animation, two friends high-fiving, money in hands, successful, vertical 9:16"
-]
+CF_ACCOUNT = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+CF_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
+CF_URL = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT}/ai/run/@cf/black-forest-labs/flux-1-schnell"
+
+def get_audio_duration(path):
+    result = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "default=noprint_wrappers=1:nokey=1", path],
+        capture_output=True, text=True
+    )
+    return float(result.stdout.strip()) if result.stdout.strip() else 3.0
+
+def generar_imagen_cloudflare(prompt, idx):
+    if not CF_ACCOUNT or not CF_TOKEN:
+        raise Exception("❌ FALLO CRÍTICO: Faltan las credenciales de Cloudflare (CF_ACCOUNT o CF_TOKEN).")
+        
+    headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json", "Accept": "image/png"}
+    seed = (idx * 1000) + int(time.time()) % 1000
+    payload = {"prompt": prompt, "width": 1080, "height": 1920, "num_steps": 4, "seed": seed}
+    
+    print(f"  ☁️ Escena {idx+1} → Seed {seed} → Generando...")
+    try:
+        r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
+        if r.status_code == 200 and len(r.content) > 10000: # Verificamos que sea una imagen real
+            hash_md5 = hashlib.md5(r.content).hexdigest()[:8]
+            print(f"     ✅ Imagen OK: {len(r.content)//1024}KB, Hash: {hash_md5}")
+            return r.content
+        else:
+            # AQUÍ ESTÁ LA MAGIA: Si falla, detenemos todo el pipeline de la nube
+            raise Exception(f"Cloudflare devolvió un error (HTTP {r.status_code}) o imagen corrupta. Texto: {r.text[:100]}")
+    except Exception as e:
+        # Este error tira el GitHub Action en rojo
+        print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
+        sys.exit(1)
+
+total_video = 0.0
+hashes_generados = []
+
+print("🚀 INICIANDO RENDERIZADO ESTRICTO (SIN FALLBACKS)...")
 
 for i, escena in enumerate(escenas):
+    # 1. Audio
     audio_path = f"audio_{i}.mp3"
     subprocess.run(["edge-tts", "--voice", VOZ_NARRADOR, "--text", escena["texto"], "--write-media", audio_path], check=True)
     subprocess.run(["cp", audio_path, "public/"], check=True)
-    
+
+    audio_dur = get_audio_duration(audio_path)
+    scene_duration = audio_dur + 0.4
+    total_video += scene_duration
+    print(f"  🎙️ Escena {i+1}: Audio {audio_dur:.2f}s + 0.4s = {scene_duration:.2f}s")
+
+    # 2. Imagen (Si falla, el script muere aquí)
     img_path = f"img_{i}.jpg"
-    prompt = prompts_comic[i % len(prompts_comic)]
-    url = f"https://image.pollinations.ai/prompt/{urllib.parse.quote(prompt)}?width=1080&height=1920&nologo=true&seed={i+42}&model=flux"
-    print(f"Descargando imagen {i+1}...")
+    img_bytes = generar_imagen_cloudflare(escena["img_prompt"], i)
     
-    # VALIDACIÓN DE IMAGEN: Si falla, creamos una imagen negra de 1080x1920
-    try:
-        r = requests.get(url, timeout=90)
-        if r.status_code == 200 and len(r.content) > 5000:
-            with open(img_path, 'wb') as f: f.write(r.content)
-        else:
-            raise Exception("Imagen inválida")
-    except Exception as e:
-        print(f"⚠️ Error con imagen {i+1}: {e}. Usando fondo de respaldo.")
-        subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1", "-frames:v", "1", img_path], check=True)
+    with open(img_path, 'wb') as f:
+        f.write(img_bytes)
         
+    hashes_generados.append(hashlib.md5(img_bytes).hexdigest()[:8])
     subprocess.run(["cp", img_path, "public/"], check=True)
-    
+
     props["scenes"].append({
         "text": escena["texto"],
         "audio": audio_path,
-        "image": img_path,  # Importante: solo el nombre, no la ruta
-        "duration": max(3.0, len(escena["texto"]) / 15 + 1.5)
+        "image": img_path,
+        "duration": scene_duration
     })
 
 with open('props.json', 'w') as f:
     json.dump(props, f, indent=2)
+
+print("\n📊 === DIAGNÓSTICO ESTRICTO DE IMÁGENES ===")
+unicos = len(set(hashes_generados))
+for i, h in enumerate(hashes_generados):
+    print(f"  Escena {i+1}: Hash {h}")
+
+if unicos != len(escenas):
+    print(f"🚨 ALERTA CRÍTICA: Se esperaban {len(escenas)} imágenes únicas, pero solo se generaron {unicos}.")
+    sys.exit(1) # Falla el workflow si hay imágenes repetidas
+else:
+    print(f"✅ ÉXITO: {unicos}/{len(escenas)} imágenes son únicas y válidas.")
+    print(f"✅ Duración total del video: {total_video:.2f}s")
