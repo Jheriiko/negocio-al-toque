@@ -1,19 +1,19 @@
 {
   "escenas": [
     {
-      "texto": "Un sobre amarillo llegó a la miscelánea. La cuenta amaneció congelada.",
+      "texto": "Un sobre amarillo lleg\u00f3 a la miscel\u00e1nea. La cuenta amaneci\u00f3 congelada.",
       "img_prompt": "Colombian comic book style, 2d animation, tense lighting, vertical 9:16, a worried shopkeeper looking at an official notice letter"
     },
     {
-      "texto": "Diez años levantándome a las cuatro de la mañana a surtir el negocio.",
+      "texto": "Diez a\u00f1os levant\u00e1ndome a las cuatro de la ma\u00f1ana a surtir el negocio.",
       "img_prompt": "Colombian comic book style, 2d animation, warm morning light, vertical 9:16, a small humble grocery store in a Colombian barrio"
     },
     {
-      "texto": "Todo por un error de facturación que nunca supe cómo arreglar.",
+      "texto": "Todo por un error de facturaci\u00f3n que nunca supe c\u00f3mo arreglar.",
       "img_prompt": "Colombian comic book style, 2d animation, frustrated expression, vertical 9:16, a man surrounded by piles of tax papers and invoices"
     },
     {
-      "texto": "Pusieron sellos de embargo en la reja. No hay cómo pagarle a los proveedores.",
+      "texto": "Pusieron sellos de embargo en la reja. No hay c\u00f3mo pagarle a los proveedores.",
       "img_prompt": "Colombian comic book style, 2d animation, melancholic mood, vertical 9:16, heavy official red seals on a small neighborhood shop door"
     },
     {
@@ -21,7 +21,7 @@
       "img_prompt": "Colombian comic book style, 2d animation, emotional shadow lighting, vertical 9:16, an elderly worker looking worried inside a dark house"
     },
     {
-      "texto": "El papel frío no entiende de sudor ni de trabajo honrado.",
+      "texto": "El papel fr\u00edo no entiende de sudor ni de trabajo honrado.",
       "img_prompt": "Colombian comic book style, 2d animation, dramatic lighting, vertical 9:16, a tired worker sitting alone with his head in his hands"
     }
   ]
