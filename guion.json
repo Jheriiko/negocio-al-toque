@@ -1,28 +1,28 @@
 {
   "escenas": [
     {
-      "texto": "Vendí las botas ortopédicas de mi abuelo para comprar cuero.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, an exhausted old cobbler sitting alone in a dim, empty shoe repair shop holding a small worn-out children's shoe, heavy rain outside the glass window"
+      "texto": "Mi hija necesita una cirugía. Y me faltan 5 millones.",
+      "img_prompt": "Colombian comic book style, 2d animation, dramatic lighting, vertical 9:16, a desperate mother looking at a medical bill with tears in her eyes"
     },
     {
-      "texto": "Un zapatero artesano ve cómo las grandes marcas devoran su taller heredado del abuelo.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a tiny cluttered cobbler workshop overshadowed by a giant modern neon storefront next door"
+      "texto": "Tengo un local de empanadas. Es mi único sustento.",
+      "img_prompt": "Colombian comic book style, 2d animation, vibrant colors, vertical 9:16, a small humble empanada stand in a barrio, warm light"
     },
     {
-      "texto": "Su hija necesita una cirugía urgente en las piernas y ya no queda un solo peso en la casa.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a worried father looking at a medical bill under the dim glow of a single hanging bulb"
+      "texto": "Empecé a vender todo. La freidora, las mesas, la nevera.",
+      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a woman sadly packing up her business into boxes, empty shelves"
     },
     {
-      "texto": "Desesperado, desarma el viejo taller y vende hasta las herramientas más queridas para juntar el anticipo.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a man packing up old tools into a cardboard box with tearful eyes, empty shelves behind him"
+      "texto": "El dueño del local me dio 3 días para desalojar.",
+      "img_prompt": "Colombian comic book style, 2d animation, tense atmosphere, vertical 9:16, a landlord handing an eviction notice to a crying woman"
     },
     {
-      "texto": "La clínica le cancela la cirugía de última hora porque faltaba una firma de una EPS corrupta.",
-      "img_prompt": "Colombian comic book style, 2d animation, melancholic lighting, vertical 9:16, a desperate father arguing with a receptionist behind a glass window at a sterile hospital desk"
+      "texto": "Pero mis vecinos del barrio hicieron algo que no esperaba.",
+      "img_prompt": "Colombian comic book style, 2d animation, warm emotional lighting, vertical 9:16, a community of neighbors putting money in a box for a woman"
     },
     {
-      "texto": "Un cliente antiguo pasa, ve la escena, le paga el tratamiento completo en silencio y le abraza el alma.",
-      "img_prompt": "Colombian comic book style, 2d animation, warm emotional lighting, vertical 9:16, two men embracing tightly on a rainy sidewalk outside a humble closed shop, cinematic expression of relief"
+      "texto": "La cirugía fue un éxito. Y el barrio me salvó la vida.",
+      "img_prompt": "Colombian comic book style, 2d animation, joyful emotional lighting, vertical 9:16, a mother hugging her daughter in a hospital bed, surrounded by neighbors"
     }
   ]
 }
