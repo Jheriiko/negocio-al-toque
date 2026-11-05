@@ -13,33 +13,28 @@ CF_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
 CF_URL = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT}/ai/run/@cf/black-forest-labs/flux-1-schnell"
 
 def get_audio_duration(path):
-    result = subprocess.run(
-        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
-         "-of", "default=noprint_wrappers=1:nokey=1", path],
-        capture_output=True, text=True
-    )
+    result = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1", path], capture_output=True, text=True)
     return float(result.stdout.strip()) if result.stdout.strip() else 3.0
 
 def generar_imagen_cloudflare(prompt, idx):
     if not CF_ACCOUNT or not CF_TOKEN:
-        raise Exception("❌ FALLO CRÍTICO: Faltan las credenciales de Cloudflare (CF_ACCOUNT o CF_TOKEN).")
+        raise Exception("❌ FALLO CRÍTICO: Faltan las credenciales de Cloudflare.")
         
     headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json", "Accept": "image/png"}
     seed = (idx * 1000) + int(time.time()) % 1000
-    payload = {"prompt": prompt, "width": 1080, "height": 1920, "num_steps": 4, "seed": seed}
+    # SOLUCIÓN: Eliminamos width y height. Solo enviamos prompt, steps y seed.
+    payload = {"prompt": prompt, "steps": 4, "seed": seed}
     
     print(f"  ☁️ Escena {idx+1} → Seed {seed} → Generando...")
     try:
         r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
-        if r.status_code == 200 and len(r.content) > 10000: # Verificamos que sea una imagen real
+        if r.status_code == 200 and len(r.content) > 10000:
             hash_md5 = hashlib.md5(r.content).hexdigest()[:8]
             print(f"     ✅ Imagen OK: {len(r.content)//1024}KB, Hash: {hash_md5}")
             return r.content
         else:
-            # AQUÍ ESTÁ LA MAGIA: Si falla, detenemos todo el pipeline de la nube
-            raise Exception(f"Cloudflare devolvió un error (HTTP {r.status_code}) o imagen corrupta. Texto: {r.text[:100]}")
+            raise Exception(f"Cloudflare devolvió un error (HTTP {r.status_code}). Texto: {r.text[:200]}")
     except Exception as e:
-        # Este error tira el GitHub Action en rojo
         print(f"     ❌ ERROR FATAL EN ESCENA {idx+1}: {e}")
         sys.exit(1)
 
@@ -49,7 +44,6 @@ hashes_generados = []
 print("🚀 INICIANDO RENDERIZADO ESTRICTO (SIN FALLBACKS)...")
 
 for i, escena in enumerate(escenas):
-    # 1. Audio
     audio_path = f"audio_{i}.mp3"
     subprocess.run(["edge-tts", "--voice", VOZ_NARRADOR, "--text", escena["texto"], "--write-media", audio_path], check=True)
     subprocess.run(["cp", audio_path, "public/"], check=True)
@@ -59,7 +53,6 @@ for i, escena in enumerate(escenas):
     total_video += scene_duration
     print(f"  🎙️ Escena {i+1}: Audio {audio_dur:.2f}s + 0.4s = {scene_duration:.2f}s")
 
-    # 2. Imagen (Si falla, el script muere aquí)
     img_path = f"img_{i}.jpg"
     img_bytes = generar_imagen_cloudflare(escena["img_prompt"], i)
     
@@ -69,12 +62,7 @@ for i, escena in enumerate(escenas):
     hashes_generados.append(hashlib.md5(img_bytes).hexdigest()[:8])
     subprocess.run(["cp", img_path, "public/"], check=True)
 
-    props["scenes"].append({
-        "text": escena["texto"],
-        "audio": audio_path,
-        "image": img_path,
-        "duration": scene_duration
-    })
+    props["scenes"].append({"text": escena["texto"], "audio": audio_path, "image": img_path, "duration": scene_duration})
 
 with open('props.json', 'w') as f:
     json.dump(props, f, indent=2)
@@ -86,7 +74,7 @@ for i, h in enumerate(hashes_generados):
 
 if unicos != len(escenas):
     print(f"🚨 ALERTA CRÍTICA: Se esperaban {len(escenas)} imágenes únicas, pero solo se generaron {unicos}.")
-    sys.exit(1) # Falla el workflow si hay imágenes repetidas
+    sys.exit(1)
 else:
     print(f"✅ ÉXITO: {unicos}/{len(escenas)} imágenes son únicas y válidas.")
     print(f"✅ Duración total del video: {total_video:.2f}s")
