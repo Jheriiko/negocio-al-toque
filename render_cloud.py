@@ -21,11 +21,12 @@ def generar_imagen_cloudflare(prompt, idx):
         raise Exception("❌ FALLO CRÍTICO: Faltan las credenciales de Cloudflare.")
         
     headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json", "Accept": "image/png"}
-    seed = (idx * 1000) + int(time.time()) % 1000
-    # SOLUCIÓN: Eliminamos width y height. Solo enviamos prompt, steps y seed.
-    payload = {"prompt": prompt, "steps": 4, "seed": seed}
     
-    print(f"  ☁️ Escena {idx+1} → Seed {seed} → Generando...")
+    # SOLUCIÓN: Sin seed. Añadimos un identificador único al prompt para forzar variación.
+    prompt_unico = f"{prompt} (escena {idx+1}, variación {int(time.time()) % 10000})"
+    payload = {"prompt": prompt_unico, "steps": 4}
+    
+    print(f"  ☁️ Escena {idx+1} → Generando (sin seed)...")
     try:
         r = requests.post(CF_URL, headers=headers, json=payload, timeout=60)
         if r.status_code == 200 and len(r.content) > 10000:
@@ -41,7 +42,7 @@ def generar_imagen_cloudflare(prompt, idx):
 total_video = 0.0
 hashes_generados = []
 
-print("🚀 INICIANDO RENDERIZADO ESTRICTO (SIN FALLBACKS)...")
+print("🚀 INICIANDO RENDERIZADO ESTRICTO (SIN SEED, PROMPT ÚNICO)...")
 
 for i, escena in enumerate(escenas):
     audio_path = f"audio_{i}.mp3"
