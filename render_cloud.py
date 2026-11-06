@@ -34,7 +34,6 @@ def generar_imagen_pollinations(prompt, idx):
 
 def crear_clip_con_ffmpeg(img_path, audio_path, texto, idx, duracion):
     ass_path = f"clips/subs_{idx}.ass"
-    # Limpieza básica de texto para ASS
     texto_limpio = texto.replace('\n', ' ').replace('\\', '').replace('{', '').replace('}', '').replace(',', '')
     
     ass_content = f"""[Script Info]
@@ -52,10 +51,22 @@ Dialogue: 0,0:00:00.00,0:00:{duracion:05.2f},Default,,0,0,0,,{texto_limpio}
     with open(ass_path, 'w') as f: f.write(ass_content)
     
     clip_path = f"clips/clip_{idx}.mp4"
-    # Zoom cinematográfico + Viñeta + ASS (Texto)
+    
+    # Ruta de la fuente en Ubuntu (GitHub Actions)
+    font_file = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+    
+    # Filtro con Zoom, Viñeta, WhatsApp (Arriba) y Subtítulos (Abajo)
+    vf = (
+        f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+        f"zoompan=z='min(zoom+0.0015,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={int(duracion*30)}:s=1080x1920:fps=30,"
+        f"vignette=PI/4,"
+        f"drawtext=fontfile={font_file}:text='WhatsApp\\: 302 121 1347':fontcolor=white:fontsize=40:box=1:boxcolor=0x25D366@0.8:boxborderw=15:x=(w-text_w)/2:y=150,"
+        f"ass={ass_path}"
+    )
+
     cmd = [
         "ffmpeg", "-y", "-loop", "1", "-i", img_path, "-i", audio_path,
-        "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,zoompan=z='min(zoom+0.0015,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={int(duracion*30)}:s=1080x1920:fps=30,vignette=PI/4,ass={ass_path}",
+        "-vf", vf,
         "-c:v", "libx264", "-preset", "ultrafast", "-crf", "20",
         "-c:a", "aac", "-b:a", "192k", "-t", str(duracion), "-pix_fmt", "yuv420p", clip_path
     ]
@@ -65,7 +76,7 @@ Dialogue: 0,0:00:00.00,0:00:{duracion:05.2f},Default,,0,0,0,,{texto_limpio}
 total_video = 0.0
 clip_paths = []
 
-console.print("🚀 INICIANDO PIPELINE FFMPEG PURO (POLLINATIONS + ZOOM + TEXTO)...")
+console.print("🚀 INICIANDO PIPELINE FFMPEG CON WHATSAPP PERMANENTE...")
 
 for i, escena in enumerate(escenas):
     audio_name = f"audio_{i}.mp3"
