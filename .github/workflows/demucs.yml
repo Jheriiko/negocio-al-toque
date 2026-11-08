@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: \${{ runner.os }}-pip-demucs
+          key: \${{ runner.os }}-pip-demucs-v2
 
       - name: Cachear Modelos de Demucs
         uses: actions/cache@v4
@@ -27,10 +27,12 @@ jobs:
           path: ~/.cache/torch
           key: \${{ runner.os }}-demucs-torch-models-v1
 
-      - name: Instalar dependencias
+      - name: Instalar dependencias (Fijando numpy y torch)
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
-          pip install -U demucs
+          pip install numpy
+          pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install demucs
 
       - name: Separar con Demucs (Archivo Local)
         run: |
