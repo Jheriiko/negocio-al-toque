@@ -25,7 +25,7 @@ jobs:
 
       - name: Separar con Demucs (6 pistas)
         run: |
-          demucs --mp3 --model htdemucs_6s cancion.mp3
+          demucs --mp3 -n htdemucs_6s cancion.mp3
 
       - name: Subir resultados
         uses: actions/upload-artifact@v4
