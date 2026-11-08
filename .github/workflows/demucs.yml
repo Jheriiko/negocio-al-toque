@@ -1,4 +1,4 @@
-name: Separar Pista (Demucs)
+name: Separar Pista (Demucs 6-Stem)
 
 on:
   workflow_dispatch:
@@ -15,28 +15,17 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Cachear paquetes de Pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: \${{ runner.os }}-pip-demucs-v2
-
-      - name: Cachear Modelos de Demucs
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/torch
-          key: \${{ runner.os }}-demucs-torch-models-v1
-
       - name: Instalar dependencias (Fijando numpy y torch)
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
+          python -m pip install --upgrade pip
           pip install numpy
           pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
           pip install demucs
 
-      - name: Separar con Demucs (Archivo Local)
+      - name: Separar con Demucs (6 pistas)
         run: |
-          demucs --two-stems=vocals --mp3 cancion.mp3
+          demucs --mp3 --model htdemucs_6s cancion.mp3
 
       - name: Subir resultados
         uses: actions/upload-artifact@v4
