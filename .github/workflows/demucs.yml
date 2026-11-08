@@ -1,0 +1,30 @@
+name: Separar Pista (Demucs)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  separar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install -U yt-dlp demucs
+      - name: Descargar audio
+        run: |
+          yt-dlp -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o "cancion.%(ext)s" "https://music.youtube.com/watch?v=tzZi-SGUrps"
+      - name: Separar con Demucs
+        run: |
+          demucs --two-stems=vocals --mp3 cancion.mp3
+      - name: Subir resultados
+        uses: actions/upload-artifact@v4
+        with:
+          name: pistas-separadas
+          path: separated/
