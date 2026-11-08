@@ -15,30 +15,24 @@ jobs:
         with:
           python-version: '3.10'
 
-      # --- INICIO DE LA MAGIA DEL CACHÉ ---
-      - name: Cachear paquetes de Pip (Dependencias)
+      - name: Cachear paquetes de Pip
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-demucs-ytdlp
+          key: \${{ runner.os }}-pip-demucs
 
-      - name: Cachear Modelos de Demucs (IA Pesada)
+      - name: Cachear Modelos de Demucs
         uses: actions/cache@v4
         with:
           path: ~/.cache/torch
-          key: ${{ runner.os }}-demucs-torch-models-v1
-      # --- FIN DE LA MAGIA DEL CACHÉ ---
+          key: \${{ runner.os }}-demucs-torch-models-v1
 
       - name: Instalar dependencias
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
-          pip install -U yt-dlp demucs
+          pip install -U demucs
 
-      - name: Descargar audio
-        run: |
-          yt-dlp -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o "cancion.%(ext)s" "https://music.youtube.com/watch?v=tzZi-SGUrps"
-
-      - name: Separar con Demucs
+      - name: Separar con Demucs (Archivo Local)
         run: |
           demucs --two-stems=vocals --mp3 cancion.mp3
 
