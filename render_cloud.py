@@ -14,6 +14,33 @@ def obtener_imagen_resiliente(prompt, idx):
     subprocess.run(["ffmpeg", "-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1", "-frames:v", "1", fallback_path, "-y"], capture_output=True)
     return fallback_path
 import requests
+
+def generar_imagen_cloudflare(prompt, idx):
+    import base64
+    import os
+    CLOUDFLARE_ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+    CLOUDFLARE_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
+    
+    if not CLOUDFLARE_ACCOUNT_ID or not CLOUDFLARE_API_TOKEN:
+        raise Exception("Faltan las credenciales de Cloudflare en las variables de entorno.")
+        
+    url = f"https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/black-forest-labs/flux-1-schnell"
+    headers = {"Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}", "Content-Type": "application/json"}
+    payload = {"prompt": prompt, "steps": 4}
+    
+    try:
+        response = requests.post(url, headers=headers, json=payload, timeout=60)
+        response.raise_for_status()
+        img_b64 = response.json()['result']['image']
+        img_data = base64.b64decode(img_b64)
+        filename = f"img_{idx}.jpg"
+        with open(filename, 'wb') as f:
+            f.write(img_data)
+        return filename
+    except Exception as e:
+        print(f"❌ Error en Cloudflare (escena {idx+1}): {e}")
+        raise e
+
 import json, os, subprocess, requests, time, io, urllib.parse, sys
 from PIL import Image
 from rich.console import Console
