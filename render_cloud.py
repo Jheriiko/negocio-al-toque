@@ -1,3 +1,18 @@
+
+import time
+def obtener_imagen_resiliente(prompt, idx):
+    max_intentos = 5
+    for intento in range(max_intentos):
+        try:
+            return generar_imagen_pollinations(prompt, idx)
+        except Exception as e:
+            console.print(f"[yellow]⚠️ Pollinations falló en escena {idx+1} (Intento {intento+1}/{max_intentos}). Reintentando en 3s...[/yellow]")
+            time.sleep(3)
+    console.print(f"[bold red]❌ Pollinations falló 5 veces en escena {idx+1}. Usando imagen de respaldo.[/bold red]")
+    # Fallback: retornar un path de imagen en negro
+    fallback_path = f"fallback_{idx}.jpg"
+    subprocess.run(["ffmpeg", "-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1", "-frames:v", "1", fallback_path, "-y"], capture_output=True)
+    return fallback_path
 import requests
 import json, os, subprocess, requests, time, io, urllib.parse, sys
 from PIL import Image
