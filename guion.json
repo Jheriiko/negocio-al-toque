@@ -1,0 +1,14 @@
+{
+  "escenas": [
+    {"texto": "¿Y si la consola más adelantada de la historia nunca hubiera muerto?", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a dusty Sega Dreamcast console abandoned in a dark attic, a single beam of light shining on it, nostalgic atmosphere"},
+    {"texto": "En 2001, la Dreamcast fracasó y Sega abandonó el hardware para siempre.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a sad gamer looking at a television screen showing a 'Game Over' screen, dark bedroom, 2000s aesthetic"},
+    {"texto": "Pero en esta realidad, Sega lanzó la Dreamcast 2 con gráficos revolucionarios.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a futuristic and sleek Sega console glowing with blue and white neon lights, product photography, high-tech background"},
+    {"texto": "Sony quebró con la PS2. Nintendo se volvió solo un estudio de juegos.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a broken PlayStation 2 on the floor with smoke, a Mario plush toy looking sad in the background, dark lighting"},
+    {"texto": "Microsoft vio el desastre y nunca se atrevió a crear la Xbox.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a dusty prototype of the first Xbox inside a glass display case with a 'Cancelled' sign, museum lighting"},
+    {"texto": "El imperio de Sega dominó el 100% del mercado por 20 años.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a massive glowing Sega logo projected onto a skyscraper in a cyberpunk city at night, corporate power"},
+    {"texto": "Pero sin competencia, los juegos empezaron a costar 150 dólares.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a video game store shelf with empty boxes and extremely high price tags, a shocked gamer looking at them, moody lighting"},
+    {"texto": "La creatividad murió. Solo salían secuelas de Sonic cada año.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a conveyor belt mass-producing identical Sonic the Hedgehog action figures, robotic and sterile factory, cold lighting"},
+    {"texto": "Los gamers empezaron a extrañar a Sony. A extrañar a Mario.", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a lonely gamer looking at an old photo of a PlayStation and a Nintendo 64, nostalgic and sad atmosphere"},
+    {"texto": "¿Fue un paraíso de Sega o el fin de la industria? ¡Comenta y suscríbete!", "img_prompt": "Cinematic photorealistic, 8k, vertical 9:16, a split screen, on the left a bright Sega logo, on the right a dark and empty gaming room, cinematic contrast"}
+  ]
+}
