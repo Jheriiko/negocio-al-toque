@@ -1,3 +1,4 @@
+import requests
 import json, os, subprocess, requests, time, io, urllib.parse, sys
 from PIL import Image
 from rich.console import Console
